@@ -1,5 +1,5 @@
-ubuntu1
-centos1	ansible_port=2222
+ubuntu1 apache_package=apache2 php_package=libapache2-mod-php
+centos1	ansible_port=2222 apache_package=httpd  php_package=php
 
 [ubuntu]
 ubuntu1
