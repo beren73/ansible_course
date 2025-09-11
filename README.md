@@ -1,2 +1,3 @@
 # ansible_course
-git repo for Udemy Getting Started with Ansible: Automation Made Easy
+git repo for the Udemy course:
+Getting Started with Ansible: Automation Made Easy
