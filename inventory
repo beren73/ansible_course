@@ -1,2 +1,8 @@
 ubuntu1
 centos1	ansible_port=2222
+
+[ubuntu]
+ubuntu1
+
+[centos]
+centos1
