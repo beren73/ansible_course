@@ -17,80 +17,18 @@
         update_cache: yes
       when: ansible_distribution == "Ubuntu"
 
-    - name: create user pboggs
-      tags: always
-      ansible.builtin.user:
-        name: pboggs
-        groups: root
-        shell: /bin/bash
-        password: "$y$j9T$fVRl7GxHzqzRawMd2nsjT.$g.nOMuxdOYP4mfQyjgouE08aK.3Lwu.5C/039VPzZl/"
-
-    - name: create user pboggs2
-      tags: always
-      ansible.builtin.user:
-        name: pboggs
-        groups: root
-        shell: /bin/bash
-        password: "$y$j9T$fVRl7GxHzqzRawMd2nsjT.$g.nOMuxdOYP4mfQyjgouE08aK.3Lwu.5C/039VPzZl/"
-
-    - name: configure sudoers file for pboggs user
-      tags: always
-      ansible.builtin.copy:
-        src: sudoer_pboggs
-        dest: /etc/sudoers.d/pboggs
-        owner: root
-        group: root
-        mode: 0440
-
-    - name: configure sudoers file for pboggs2 user
-      tags: always
-      ansible.builtin.copy:
-        src: sudoer_pboggs2
-        dest: /etc/sudoers.d/pboggs2
-        owner: root
-        group: root
-        mode: 0440
-
-    - name: copy ssh pub key to authorized keys pboggs
-      tags: always
-      ansible.builtin.authorized_key:
-        user: pboggs
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCuIOEZSPTNciBNmrVtX5MSFAmdTWjKCfynCl2xEhJb2CAeP6MsTF9hZiQ9+tTWVrkOGE2uc1qdwERaG1XfrHJRBDR6zjJIcf9CQ/tayny2rAF4vixhHMCKCZGm3VrQFHemyZuBiFinkYvFsA33BKCT8K8IAtqMU3MRMn9xHVwBysUwszOZVtDFPdShol/2oRRLxGqFZaWwmDc4dBP2uuTTJdl4xVb1RX+M0MifsSYBkxSDrR9cBxiH5FwiAPF6/AgqBazVvi08F9AKmKKWXRVrjAuLCM3osd6m33ZHa6GuG1Fob/PWBF57cP1McV65+3b3zV8l3j7Zd0IKJHTSKyWn+rhL1dFhI5vDubxx8CZKYpTQpWpmlI06PXnjjuT4u2cavJpEpEYLrcpCBQtIXj1W3Ka03JZwrRLrjT6zbNyMuIBYPl1K5rtIe++CgnzGWqcsB2tEdj0VUpMGWIy3O7+fLpTy+Pf/6bB1HWntsgG8e9pHIr1wcpPh3iD9IWUQyRM= ansible@ubuntu-c"
-
-    - name: copy ssh pub key to authorized keys pboggs2
-      tags: always
-      ansible.builtin.authorized_key:
-        user: pboggs2
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCuIOEZSPTNciBNmrVtX5MSFAmdTWjKCfynCl2xEhJb2CAeP6MsTF9hZiQ9+tTWVrkOGE2uc1qdwERaG1XfrHJRBDR6zjJIcf9CQ/tayny2rAF4vixhHMCKCZGm3VrQFHemyZuBiFinkYvFsA33BKCT8K8IAtqMU3MRMn9xHVwBysUwszOZVtDFPdShol/2oRRLxGqFZaWwmDc4dBP2uuTTJdl4xVb1RX+M0MifsSYBkxSDrR9cBxiH5FwiAPF6/AgqBazVvi08F9AKmKKWXRVrjAuLCM3osd6m33ZHa6GuG1Fob/PWBF57cP1McV65+3b3zV8l3j7Zd0IKJHTSKyWn+rhL1dFhI5vDubxx8CZKYpTQpWpmlI06PXnjjuT4u2cavJpEpEYLrcpCBQtIXj1W3Ka03JZwrRLrjT6zbNyMuIBYPl1K5rtIe++CgnzGWqcsB2tEdj0VUpMGWIy3O7+fLpTy+Pf/6bB1HWntsgG8e9pHIr1wcpPh3iD9IWUQyRM= ansible@ubuntu-c"
-
-- hosts: web_servers
+- hosts: all
   become: true
-  tasks:
-
-    - name: install apache on web servers
-      tags: apache, ubuntu
-      ansible.builtin.apt:
-        name:
-          - apache2
-          - libapache2-mod-php
-      when: ansible_distribution == "Ubuntu"
-
-    - name: copy html file
-      tags: apache, ubuntu
-      ansible.builtin.copy:
-        src: default_site.html
-        dest: /var/www/html/index.htm
-        owner: root
-        group: root
-        mode: 0644
+  roles:
+    - base
 
 - hosts: db_servers
   become: true
-  tasks:
+  roles:
+    - db_servers
 
-    - name: install mariadb on db servers
-      tags: db,centos
-      ansible.builtin.dnf:
-        name: mariadb
-        state: latest
-      when: ansible_distribution == "CentOS"
+- hosts: web_servers
+  become: true
+  roles:
+    - web_servers
+
