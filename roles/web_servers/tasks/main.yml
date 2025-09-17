@@ -1,16 +1,31 @@
 ---
-    - name: install apache on web servers
-      tags: apache, ubuntu
-      ansible.builtin.apt:
-        name:
-          - apache2
-          - libapache2-mod-php
+- name: install apache on web servers
+  tags: apache
+  ansible.builtin.package:
+    name:
+      - "{{ apache_package }}"
 
-    - name: copy html file
-      tags: apache, ubuntu
-      ansible.builtin.copy:
-        src: default_site.html
-        dest: /var/www/html/index.htm
-        owner: root
-        group: root
-        mode: 0644
+- name: ensure apache is running
+  tags: apache
+  ansible.builtin.service:
+    name: "{{ apache_service }}"
+    state: started
+
+- name: change email address for admin
+  tags: apache,centos
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin SuperUser@midearth.home
+  when: ansible_distribution == "CentOS"
+  notify: restart_apache
+
+- name: copy html file
+  tags: apache
+  ansible.builtin.copy:
+    src: default_site.html
+    dest: /var/www/html/index.htm
+    owner: root
+    group: root
+    mode: 0644
+

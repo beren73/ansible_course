@@ -1,6 +1,6 @@
 [all]
 ubuntu1 
-centos1	ansible_port=2222 
+centos1	
 
 [ubuntu]
 ubuntu1
@@ -10,6 +10,7 @@ centos1
 
 [web_servers]
 ubuntu1
+centos1
 
 [db_servers]
 centos1
