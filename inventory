@@ -14,3 +14,7 @@ centos1
 
 [db_servers]
 centos1
+
+[apache]
+ubuntu1
+centos1
